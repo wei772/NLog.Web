@@ -68,6 +68,9 @@
     <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\AspNetSessionValueLayoutRenderer.cs" />
     <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\AspNetUserAuthTypeLayoutRenderer.cs" />
     <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\AspNetUserIdentityLayoutRenderer.cs" />
+    <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\AssemblyVersionLayoutRenderer.cs">
+      <Link>AssemblyVersionLayoutRenderer.cs</Link>
+    </Compile>
     <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\IISInstanceNameLayoutRenderer.cs" />
     <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\AspNetRequestReferrerRenderer.cs" />
     <Compile Include="..\NLog.Web.AspNetCore\LayoutRenderers\AspNetRequestUrlRenderer.cs" />

@@ -362,7 +362,7 @@
           "lib/netstandard1.1/Microsoft.Net.Http.Headers.dll": {}
         }
       },
-      "NLog/5.0.0-beta04": {
+      "NLog/5.0.0-beta05": {
         "type": "package",
         "frameworkAssemblies": [
           "System",
@@ -382,17 +382,12 @@
           "lib/net45/NLog.dll": {}
         }
       },
-      "NLog.Extensions.Logging/1.0.0-rtm-alpha5": {
+      "NLog.Extensions.Logging/1.0.0-rtm-beta3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Hosting": "1.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
-          "NLog": "4.3.11"
+          "NLog": "4.4.2"
         },
-        "frameworkAssemblies": [
-          "System.Xml",
-          "System.Xml.Serialization"
-        ],
         "compile": {
           "lib/net451/NLog.Extensions.Logging.dll": {}
         },
@@ -1150,7 +1145,7 @@
           "System.Xml.XDocument": "4.0.11"
         }
       },
-      "NLog/5.0.0-beta04": {
+      "NLog/5.0.0-beta05": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
@@ -1183,12 +1178,12 @@
           "lib/netstandard1.3/NLog.dll": {}
         }
       },
-      "NLog.Extensions.Logging/1.0.0-rtm-alpha5": {
+      "NLog.Extensions.Logging/1.0.0-rtm-beta3": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Hosting": "1.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
-          "NLog": "5.0.0-beta03"
+          "NLog": "5.0.0-beta05",
+          "System.AppContext": "4.3.0"
         },
         "compile": {
           "lib/netstandard1.3/NLog.Extensions.Logging.dll": {}
@@ -1236,10 +1231,10 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "System.AppContext/4.1.0": {
+      "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
-          "System.Runtime": "4.1.0"
+          "System.Runtime": "4.3.0"
         },
         "compile": {
           "ref/netstandard1.3/System.AppContext.dll": {}
@@ -2861,12 +2856,12 @@
         "dotnet_library_license.txt"
       ]
     },
-    "NLog/5.0.0-beta04": {
-      "sha512": "kba9JT0qE8sLbBvTa6zxxh4sNLGdgWhQLuzFid/5vpakLuASIc2yI8b7yo+YTB5ZWM8vQDqIUQcFfuCgXYY99Q==",
+    "NLog/5.0.0-beta05": {
+      "sha512": "w8o0ZjF/8qM8eOrm8PtfE0AJv+huOt3T3C7EjUfao1whmqRTTAcTDCELwA3O6WG6ErYzqQnciUeRUEpM/OvWMA==",
       "type": "package",
-      "path": "NLog/5.0.0-beta04",
+      "path": "NLog/5.0.0-beta05",
       "files": [
-        "NLog.5.0.0-beta04.nupkg.sha512",
+        "NLog.5.0.0-beta05.nupkg.sha512",
         "NLog.nuspec",
         "lib/monoandroid23/NLog.dll",
         "lib/monoandroid23/NLog.xml",
@@ -2890,15 +2885,16 @@
         "lib/xamarinios10/NLog.xml"
       ]
     },
-    "NLog.Extensions.Logging/1.0.0-rtm-alpha5": {
-      "sha512": "EAyWzB2J1CbsLoXyeVDZRiiJ0gmnvkssnq3M7r6DHrtkqXyowCcnqLg+na0FYWQrVLcenmoJ+Lo466GHZ7RJ4A==",
+    "NLog.Extensions.Logging/1.0.0-rtm-beta3": {
+      "sha512": "ZJNBeEAGK9uAYUzZsNo3Ow6ABWCC6lrTPbcw4bX7TZr7plSJQtuMlnPDUNFxlzGdHLhubC3otbbSwVjb5R3ypQ==",
       "type": "package",
-      "path": "NLog.Extensions.Logging/1.0.0-rtm-alpha5",
+      "path": "NLog.Extensions.Logging/1.0.0-rtm-beta3",
       "files": [
-        "NLog.Extensions.Logging.1.0.0-rtm-alpha5.nupkg.sha512",
-        "NLog.Extensions.Logging.nuspec",
         "lib/net451/NLog.Extensions.Logging.dll",
-        "lib/netstandard1.3/NLog.Extensions.Logging.dll"
+        "lib/net451/NLog.Extensions.Logging.xml",
+        "lib/netstandard1.3/NLog.Extensions.Logging.dll",
+        "nlog.extensions.logging.1.0.0-rtm-beta3.nupkg.sha512",
+        "nlog.extensions.logging.nuspec"
       ]
     },
     "runtime.native.System/4.0.0": {
@@ -2937,12 +2933,12 @@
         "runtime.native.System.Security.Cryptography.nuspec"
       ]
     },
-    "System.AppContext/4.1.0": {
-      "sha512": "3QjO4jNV7PdKkmQAVp9atA+usVnKRwI3Kx1nMwJ93T0LcQfx7pKAYk0nKz5wn1oP5iqlhZuy6RXOFdhr7rDwow==",
+    "System.AppContext/4.3.0": {
+      "sha512": "JNZqGL1GEa2YvWFsqDA308vTIQmdTXNYISX56DGMKDMudASGBpQTiQY51/oxJc/gNOShXWTs+/Lck2KYPz/j3Q==",
       "type": "package",
-      "path": "System.AppContext/4.1.0",
+      "path": "System.AppContext/4.3.0",
       "files": [
-        "System.AppContext.4.1.0.nupkg.sha512",
+        "System.AppContext.4.3.0.nupkg.sha512",
         "System.AppContext.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -7472,8 +7468,9 @@
       "Microsoft.AspNetCore.Hosting.Abstractions >= 1.0.0",
       "Microsoft.AspNetCore.Http.Extensions >= 1.0.0",
       "Microsoft.AspNetCore.Routing.Abstractions >= 1.0.0",
-      "NLog >= 5.0.0-beta04",
-      "NLog.Extensions.Logging >= 1.0.0-rtm-alpha5"
+      "Microsoft.Extensions.PlatformAbstractions >= 1.0.0",
+      "NLog >= 5.0.0-beta05",
+      "NLog.Extensions.Logging >= 1.0.0-rtm-beta3"
     ],
     ".NETFramework,Version=v4.5.1": [],
     ".NETStandard,Version=v1.3": []
