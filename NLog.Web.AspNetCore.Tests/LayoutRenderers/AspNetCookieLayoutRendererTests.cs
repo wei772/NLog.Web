@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD_1plus
-//TODO test .NET Core
+﻿//TODO test .NET Core
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,6 +8,8 @@ using NLog.Web.Enums;
 using Xunit;
 
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
@@ -139,6 +140,8 @@ namespace NLog.Web.Tests.LayoutRenderers
             Assert.Equal(expectedResult, result);
         }
 
+#if !NETSTANDARD_1plus
+
         [Fact]
         public void CommaSeperatedCookieNamesTest_Mulitple_FLAT_Formatting()
         {
@@ -192,6 +195,8 @@ namespace NLog.Web.Tests.LayoutRenderers
             Assert.Equal(expectedResult, result);
         }
 
+#endif
+
         /// <summary>
         /// Create cookie renderer with mockup http context
         /// </summary>
@@ -200,15 +205,35 @@ namespace NLog.Web.Tests.LayoutRenderers
         /// <returns></returns>
         private static AspNetRequestCookieLayoutRenderer CreateRenderer(bool addKey = true, bool addCookie2 = false)
         {
+            var cookieNames = new List<string> { "key" };
             var httpContext = Substitute.For<HttpContextBase>();
+
+
+#if NETSTANDARD_1plus
+            IRequestCookieCollection cookies = Substitute.For<IRequestCookieCollection>();
+            cookies["key"].Returns("TEST");
+            httpContext.Request.Cookies.Count.Returns(1);
+            if (addKey)
+            {
+                cookies["key1"].Returns("TEST1");
+                httpContext.Request.Cookies.Count.Returns(2);
+            }
+
+            if (addCookie2)
+            {
+                cookies["key2"].Returns("Test");
+                cookies["key3"].Returns("Test456");
+                cookieNames.Add("key2");
+                httpContext.Request.Cookies.Count.Returns(4);
+            }
+#else
             var cookie1 = new HttpCookie("key", "TEST");
             if (addKey)
             {
                 cookie1["Key1"] = "TEST1";
             }
-
             var cookies = new HttpCookieCollection { cookie1 };
-            var cookieNames = new List<string> { "key" };
+           
             if (addCookie2)
             {
                 var cookie2 = new HttpCookie("key2", "Test");
@@ -216,6 +241,8 @@ namespace NLog.Web.Tests.LayoutRenderers
                 cookies.Add(cookie2);
                 cookieNames.Add("key2");
             }
+#endif
+
 
             httpContext.Request.Cookies.Returns(cookies);
             var renderer = new AspNetRequestCookieLayoutRenderer();
@@ -230,4 +257,3 @@ namespace NLog.Web.Tests.LayoutRenderers
         }
     }
 }
-#endif
