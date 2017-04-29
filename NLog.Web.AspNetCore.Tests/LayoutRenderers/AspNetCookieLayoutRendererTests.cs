@@ -8,8 +8,7 @@ using NLog.Web.Enums;
 using Xunit;
 
 using System.Reflection;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
+
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
@@ -19,6 +18,8 @@ using System.Web;
 using System.Collections.Specialized;
 using System.Web.SessionState;
 #else
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
 using HttpContextBase = Microsoft.AspNetCore.Http.HttpContext;
 #endif
@@ -212,11 +213,12 @@ namespace NLog.Web.Tests.LayoutRenderers
 #if NETSTANDARD_1plus
             IRequestCookieCollection cookies = Substitute.For<IRequestCookieCollection>();
             cookies["key"].Returns("TEST");
-            httpContext.Request.Cookies.Count.Returns(1);
+
+            cookies.Count.Returns(1);
             if (addKey)
             {
                 cookies["key1"].Returns("TEST1");
-                httpContext.Request.Cookies.Count.Returns(2);
+                cookies.Count.Returns(2);
             }
 
             if (addCookie2)
@@ -224,7 +226,7 @@ namespace NLog.Web.Tests.LayoutRenderers
                 cookies["key2"].Returns("Test");
                 cookies["key3"].Returns("Test456");
                 cookieNames.Add("key2");
-                httpContext.Request.Cookies.Count.Returns(4);
+                cookies.Count.Returns(4);
             }
 #else
             var cookie1 = new HttpCookie("key", "TEST");
