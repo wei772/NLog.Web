@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using NLog.Config;
 using NLog.Web.Enums;
 using System;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using NLog.Web.Internal;
 
 namespace NLog.Web.LayoutRenderers
@@ -27,9 +29,6 @@ namespace NLog.Web.LayoutRenderers
     [LayoutRenderer("aspnet-request-cookie")]
     public class AspNetRequestCookieLayoutRenderer : AspNetLayoutRendererBase
     {
-        private const string cookiesNameSeparator = "=";
-        private const string flatItemSeperator = ",";
-
         /// <summary>
         /// List Cookie Key as String to be rendered from Request.
         /// </summary>
@@ -55,15 +54,98 @@ namespace NLog.Web.LayoutRenderers
                 return;
             }
 
-            if (this.CookieNames?.Count > 0 && httpRequest?.Cookies?.Count > 0)
+            var cookies = httpRequest.Cookies;
+
+            if (this.CookieNames?.Count > 0 && cookies?.Count > 0)
             {
-                bool firstItem = true;
-                foreach (var cookieName in this.CookieNames)
+                var cookieValues = GetCookies(cookies);
+                SerializeValues(cookieValues, builder);
+            }
+        }
+
+        private IEnumerable<(string key, string value)> GetCookies(IRequestCookieCollection cookies)
+        {
+            var cookieNames = this.CookieNames;
+            if (cookieNames != null)
+            {
+                foreach (var cookieName in cookieNames)
                 {
-                    var cookieValue = httpRequest.Cookies[cookieName];
-                    this.SerializeCookie(cookieName, cookieValue, builder, firstItem);
-                    firstItem = false;
+                    if (cookies.TryGetValue(cookieName, out var cookieValue))
+                    {
+                        yield return (cookieName, cookieValue);
+                    }
                 }
+            }
+        }
+
+
+        private void SerializeValues(IEnumerable<(string key, string value)> values, StringBuilder builder)
+        {
+            var firstItem = true;
+
+
+            switch (this.OutputFormat)
+            {
+                case AspNetRequestLayoutOutputFormat.Flat:
+
+                    foreach (var (key, value) in values)
+                    {
+                        if (!firstItem)
+                        {
+                            builder.Append(',');
+                        }
+                        firstItem = false;
+                        builder.Append(key);
+                        builder.Append('=');
+                        builder.Append(value);
+                    }
+
+
+                    break;
+                case AspNetRequestLayoutOutputFormat.Json:
+
+
+                    var valueList = values.ToList();
+
+                    if (valueList.Count > 0)
+                    {
+                        var addArray = valueList.Count > 1;
+
+                        if (addArray)
+                        {
+                            builder.Append('[');
+                        }
+
+                        foreach (var (key, value) in valueList)
+                        {
+                            if (!firstItem)
+                            {
+                                builder.Append(',');
+                            }
+                            firstItem = false;
+
+                            //quoted key
+                            builder.Append('{');
+                            builder.Append('"');
+                            //todo escape quotes
+                            builder.Append(key);
+                            builder.Append('"');
+
+                            builder.Append(':');
+
+                            //quoted value;
+                            builder.Append('"');
+                            //todo escape quotes
+                            builder.Append(value);
+                            builder.Append('"');
+                            builder.Append('}');
+                        }
+                        if (addArray)
+                        {
+                            builder.Append(']');
+                        }
+                    }
+                    break;
             }
         }
 
@@ -84,24 +166,5 @@ namespace NLog.Web.LayoutRenderers
         }
 
 #endif
-        private void SerializeCookie(string cookieName, string cookieValue, StringBuilder builder, bool firstItem)
-        {
-            var cookieRaw = $"{cookieName}{cookiesNameSeparator}{cookieValue}";
-
-            switch (this.OutputFormat)
-            {
-                case AspNetRequestLayoutOutputFormat.Flat:
-                    if (!firstItem)
-                        builder.Append($"{flatItemSeperator}");
-                    builder.Append(cookieRaw);
-                    break;
-                case AspNetRequestLayoutOutputFormat.Json:
-                    if (!firstItem)
-                        builder.Append($"{GlobalConstants.jsonElementSeparator}");
-
-                    builder.Append($"{GlobalConstants.jsonElementStartBraces}{GlobalConstants.doubleQuotes}{cookieRaw}{GlobalConstants.doubleQuotes}{GlobalConstants.jsonElementEndBraces}");
-                    break;
-            }
-        }
     }
 }
