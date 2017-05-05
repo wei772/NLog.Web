@@ -59,11 +59,11 @@ namespace NLog.Web.LayoutRenderers
             if (this.CookieNames?.Count > 0 && cookies?.Count > 0)
             {
                 var cookieValues = GetCookies(cookies);
-                SerializeValues(cookieValues, builder);
+                SerializeValues(cookieValues, builder, this.OutputFormat);
             }
         }
 
-        private IEnumerable<(string key, string value)> GetCookies(IRequestCookieCollection cookies)
+        private IEnumerable<KeyValuePair<string, string>> GetCookies(IRequestCookieCollection cookies)
         {
             var cookieNames = this.CookieNames;
             if (cookieNames != null)
@@ -72,82 +72,12 @@ namespace NLog.Web.LayoutRenderers
                 {
                     if (cookies.TryGetValue(cookieName, out var cookieValue))
                     {
-                        yield return (cookieName, cookieValue);
+                        yield return new KeyValuePair<string, string>(cookieName, cookieValue);
                     }
                 }
             }
         }
 
-
-        private void SerializeValues(IEnumerable<(string key, string value)> values, StringBuilder builder)
-        {
-            var firstItem = true;
-
-
-            switch (this.OutputFormat)
-            {
-                case AspNetRequestLayoutOutputFormat.Flat:
-
-                    foreach (var (key, value) in values)
-                    {
-                        if (!firstItem)
-                        {
-                            builder.Append(',');
-                        }
-                        firstItem = false;
-                        builder.Append(key);
-                        builder.Append('=');
-                        builder.Append(value);
-                    }
-
-
-                    break;
-                case AspNetRequestLayoutOutputFormat.Json:
-
-
-                    var valueList = values.ToList();
-
-                    if (valueList.Count > 0)
-                    {
-                        var addArray = valueList.Count > 1;
-
-                        if (addArray)
-                        {
-                            builder.Append('[');
-                        }
-
-                        foreach (var (key, value) in valueList)
-                        {
-                            if (!firstItem)
-                            {
-                                builder.Append(',');
-                            }
-                            firstItem = false;
-
-                            //quoted key
-                            builder.Append('{');
-                            builder.Append('"');
-                            //todo escape quotes
-                            builder.Append(key);
-                            builder.Append('"');
-
-                            builder.Append(':');
-
-                            //quoted value;
-                            builder.Append('"');
-                            //todo escape quotes
-                            builder.Append(value);
-                            builder.Append('"');
-                            builder.Append('}');
-                        }
-                        if (addArray)
-                        {
-                            builder.Append(']');
-                        }
-                    }
-                    break;
-            }
-        }
 
 #if !NETSTANDARD_1plus
         /// <summary>
