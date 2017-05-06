@@ -1,9 +1,10 @@
 ﻿using System.Text;
 #if !NETSTANDARD_1plus
-using System.Web;
 using System.Collections.Specialized;
+using System.Web;
 #else
 using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Http;
 #endif
 using NLog.LayoutRenderers;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using NLog.Config;
 using NLog.Web.Enums;
 using System;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
+
 using NLog.Web.Internal;
 
 namespace NLog.Web.LayoutRenderers
@@ -63,6 +64,29 @@ namespace NLog.Web.LayoutRenderers
             }
         }
 
+
+#if !NETSTANDARD_1plus
+
+        private IEnumerable<KeyValuePair<string, string>> GetCookies(HttpCookieCollection cookies)
+        {
+            var cookieNames = this.CookieNames;
+            if (cookieNames != null)
+            {
+                foreach (var cookieName in cookieNames)
+                {
+                    var value = cookies[cookieName];
+                    if (value != null)
+                    {
+                        foreach (string key in value.Values.AllKeys)
+                        {
+                            yield return new KeyValuePair<string, string>(key, value.Values[key]);
+                        }
+                    }
+                }
+            }
+        }
+#else
+
         private IEnumerable<KeyValuePair<string, string>> GetCookies(IRequestCookieCollection cookies)
         {
             var cookieNames = this.CookieNames;
@@ -77,24 +101,8 @@ namespace NLog.Web.LayoutRenderers
                 }
             }
         }
-
-
-#if !NETSTANDARD_1plus
-        /// <summary>
-        /// To Serialize the HttpCookie based on the configured output format.
-        /// </summary>
-        /// <param name="cookieName">Name of the cookie</param>
-        /// <param name="cookie">The current cookie item.</param>
-        /// <param name="builder">The <see cref="StringBuilder"/> to append the rendered data to.</param>
-        /// <param name="firstItem">Whether it is first item.</param>
-        private void SerializeCookie(string cookieName, HttpCookie cookie, StringBuilder builder, bool firstItem)
-        {
-            if (cookie != null)
-            {
-                this.SerializeCookie(cookieName, cookie.Value, builder, firstItem);
-            }
-        }
-
 #endif
+
+
     }
 }

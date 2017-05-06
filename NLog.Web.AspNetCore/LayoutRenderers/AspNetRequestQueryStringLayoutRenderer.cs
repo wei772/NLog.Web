@@ -91,7 +91,14 @@ namespace NLog.Web.LayoutRenderers
             SerializeValues(values, builder, this.OutputFormat);
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> GetValues(IQueryCollection queryStrings, IEnumerable<string> queryStringKeys)
+        private static IEnumerable<KeyValuePair<string, string>> GetValues(
+#if NETSTANDARD_1plus
+            IQueryCollection queryStrings,
+#else
+            NameValueCollection queryStrings,
+#endif
+            IEnumerable<string> queryStringKeys)
+
         {
             if (queryStrings.Count > 0)
             {
