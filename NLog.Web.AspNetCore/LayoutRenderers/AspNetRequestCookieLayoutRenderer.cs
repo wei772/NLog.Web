@@ -75,11 +75,29 @@ namespace NLog.Web.LayoutRenderers
                 foreach (var cookieName in cookieNames)
                 {
                     var value = cookies[cookieName];
+
+                   
+
                     if (value != null)
                     {
-                        foreach (string key in value.Values.AllKeys)
+                        if (this.OutputFormat == AspNetRequestLayoutOutputFormat.Json)
                         {
-                            yield return new KeyValuePair<string, string>(key, value.Values[key]);
+                            //split
+                            var isFirst = true;
+                            foreach (var key in value.Values.AllKeys)
+                            {
+                                var key2 = key;
+                                if (isFirst)
+                                {
+                                    key2 = cookieName;
+                                    isFirst = false;
+                                }
+                                yield return new KeyValuePair<string, string>(key2, value.Values[key]);
+                            }
+                        }
+                        else
+                        {
+                            yield return new KeyValuePair<string, string>(cookieName, value.Value);
                         }
                     }
                 }

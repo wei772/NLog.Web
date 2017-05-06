@@ -54,7 +54,7 @@ namespace NLog.Web.LayoutRenderers
 
 
 
-            var allQueryStrings = this.QueryStringKeys == null || this.QueryStringKeys.Count == 0;
+            var printAllQueryString = this.QueryStringKeys == null || this.QueryStringKeys.Count == 0;
             var queryStringKeys = this.QueryStringKeys;
 #if !NETSTANDARD_1plus
             var queryStrings = httpRequest.QueryString;
@@ -63,7 +63,7 @@ namespace NLog.Web.LayoutRenderers
                 return;
 
 
-            if (allQueryStrings)
+            if (printAllQueryString)
             {
                 queryStringKeys = new List<string>(queryStrings.Keys.Count);
 
@@ -81,7 +81,7 @@ namespace NLog.Web.LayoutRenderers
             if (queryStrings == null)
                 return;
 
-            if (allQueryStrings)
+            if (printAllQueryString)
             {
                 queryStringKeys = queryStrings.Keys.ToList();
             }

@@ -152,7 +152,7 @@ namespace NLog.Web.Tests.LayoutRenderers
         [Fact]
         public void KeyFoundRendersVakue_Cookie_Mulitple_Cookies_Cookie_Items_Json_Formatting()
         {
-            var expectedResult = "[{key:\"TEST&Key1=TEST1\"},{key2:\"Test&key3=Test456\"}]";
+            var expectedResult = "[{\"key\":\"TEST\"},{\"Key1\":\"TEST1\"},{\"key2\":\"Test\"},{\"key3\":\"Test456\"}]";
             var renderer = CreateRenderer(addCookie2: true);
             renderer.OutputFormat = AspNetRequestLayoutOutputFormat.Json;
 
@@ -195,7 +195,7 @@ namespace NLog.Web.Tests.LayoutRenderers
         [Fact]
         public void CommaSeperatedCookieNamesTest_Mulitple_Json_Formatting()
         {
-            var expectedResult = "{\"key=TEST&Key1=TEST1\"}";
+            var expectedResult = "[{\"key\":\"TEST\"},{\"Key1\":\"TEST1\"}]";
 
             string config = @"<nlog>
     <extensions>
@@ -267,7 +267,9 @@ namespace NLog.Web.Tests.LayoutRenderers
                 });
 
 #else
+
             var cookie1 = new HttpCookie("key", "TEST");
+            cookieNames.Add("key");
             if (addKey)
             {
                 cookie1["Key1"] = "TEST1";
